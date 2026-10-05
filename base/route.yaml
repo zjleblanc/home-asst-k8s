@@ -1,0 +1,22 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: home-assistant
+  labels:
+    app.kubernetes.io/name: home-assistant
+    app.kubernetes.io/component: server
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    haproxy.router.openshift.io/timeout: 3600s
+spec:
+  host: route.example.com # overridden per-environment, see overlays/*/patches/route-host.yaml
+  to:
+    kind: Service
+    name: home-assistant
+    weight: 100
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None

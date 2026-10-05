@@ -1,0 +1,23 @@
+# Grants the home-assistant ServiceAccount permission to run pods under the
+# built-in "anyuid" SCC. The upstream Home Assistant image runs as root (UID 0)
+# via its s6-overlay init system, which the default "restricted"/"restricted-v2"
+# SCC on MicroShift/OpenShift will not admit. "anyuid" permits any UID,
+# including root, without granting the broader privileges of "privileged"
+# (host networking, host paths, extra capabilities, etc. are still denied).
+#
+# This binding is namespace-scoped: it only authorizes this one ServiceAccount,
+# not every workload in the cluster.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: home-assistant-anyuid
+  labels:
+    app.kubernetes.io/name: home-assistant
+    app.kubernetes.io/component: server
+subjects:
+  - kind: ServiceAccount
+    name: home-assistant
+roleRef:
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-assistant
+spec:
+  template:
+    spec:
+      containers:
+        - name: home-assistant
+          env:
+            - name: TZ
+              value: America/Chicago

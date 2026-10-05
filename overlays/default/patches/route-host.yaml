@@ -1,0 +1,6 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: home-assistant
+spec:
+  host: ha.leblanc.rodeo
