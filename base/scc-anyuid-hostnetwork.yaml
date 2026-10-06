@@ -1,0 +1,38 @@
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: home-assistant-anyuid-hostnetwork
+  labels:
+    app.kubernetes.io/name: home-assistant
+    app.kubernetes.io/component: server
+# --- escalations actually needed ---
+allowHostNetwork: true # required for hostNetwork: true
+allowHostPorts: true   # container ports become host ports under hostNetwork
+runAsUser:
+  type: RunAsAny        # required so HA's s6-overlay init can run as root
+# --- everything else stays locked down ---
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostPID: false
+allowPrivilegeEscalation: false
+allowPrivilegedContainer: false
+allowedCapabilities: null
+defaultAddCapabilities: null
+requiredDropCapabilities:
+  - ALL
+readOnlyRootFilesystem: false
+fsGroup:
+  type: RunAsAny
+supplementalGroups:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+seccompProfiles:
+  - runtime/default
+volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - projected
+  - secret

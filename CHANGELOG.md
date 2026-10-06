@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-10-05 — Add custom SCC for Home Assistant host-network deployment
+
+### Added
+- Created `overlays/default/scc-anyuid-hostnetwork.yaml`, a custom `SecurityContextConstraints` that combines `anyuid` (arbitrary UID for root access) and `hostnetwork` capabilities, required because OpenShift admission only selects a single SCC per pod.
+- Created `overlays/default/sa-rolebinding-scc.yaml` to grant the custom SCC to the `home-assistant` ServiceAccount.
+
+### Changed
+- Refined `overlays/default/kustomization.yaml` to remove the blanket `namespace` transformer, preventing it from incorrectly stamping a namespace on the cluster-scoped SCC; the RoleBinding now sets its own namespace explicitly.
+
+### Removed
+- Deleted `overlays/default/scc-rolebinding-hostnetwork.yaml`, as it is superseded by the custom SCC that allows both root access and host networking.
+
 ## 2026-10-05 — Fix Home Assistant CrashLoopBackOff from SCC RoleBinding regression
 
 ### Fixed
