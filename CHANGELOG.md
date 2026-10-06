@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-05 — Fix Home Assistant CrashLoopBackOff from SCC RoleBinding regression
+
+### Fixed
+- Restored `base/scc-rolebinding.yaml` to grant the `anyuid` SCC — it had been overwritten to grant `hostnetwork-v2` instead, which forces a random non-root UID and breaks the HA container's s6-overlay `/run` setup (`wrong permissions on /run for a gid 0 setup`)
+- Added a separate `overlays/default/scc-rolebinding-hostnetwork.yaml` `RoleBinding` granting `hostnetwork-v2`, so host-network overlays get both SCCs without widening the base grant
+- Set `namespace: home-assistant` on the overlay `Kustomization` so the new RoleBinding resource namespaces correctly
+
 ## 2026-10-05 — Scaffold Home Assistant Kustomize deployment for MicroShift/ArgoCD
 
 ### Added

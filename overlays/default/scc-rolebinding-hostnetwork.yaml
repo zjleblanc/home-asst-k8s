@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: home-assistant-anyuid
+  name: home-assistant-hostnetwork
   labels:
     app.kubernetes.io/name: home-assistant
     app.kubernetes.io/component: server
@@ -10,5 +10,5 @@ subjects:
     name: home-assistant
 roleRef:
   kind: ClusterRole
-  name: system:openshift:scc:anyuid
+  name: system:openshift:scc:hostnetwork-v2
   apiGroup: rbac.authorization.k8s.io
